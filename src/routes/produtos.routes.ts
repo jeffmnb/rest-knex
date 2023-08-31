@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
     const produtos = await db("tabela-produtos").select("*");
     res.status(200).json(produtos);
   } catch (error) {
-    res.status(500).json({ error: `EndPoint fora com erro: ${error}` });
+    res.status(500).json({ error: `EndPoint out with error: ${error}` });
   }
 });
 
@@ -37,12 +37,56 @@ router.post("/insert", async (req, res) => {
   const { produto } = req?.body ?? {};
 
   if (!produto)
-    return res.status(400).json({ messageError: "server cant read product" });
+    return res.status(400).json({ messageError: "server cant read id field" });
 
   try {
     const newProduct = await db("tabela-produtos").insert(produto, ["id"]);
 
     res.json({ value: newProduct });
+  } catch (error) {
+    res.status(500).json({ messageError: error });
+  }
+});
+
+router.put("/update/:id", async (req, res) => {
+  const { id } = req?.params ?? {};
+  const data = req?.body ?? {};
+
+  if (!id)
+    return res.status(400).json({ messageError: "server cant read id field" });
+
+  try {
+    const verifyId = await db("tabela-produtos").where({ id });
+
+    if (!verifyId.length)
+      return res
+        .status(404)
+        .json({ message: `not fount any product with id ${id}` });
+
+    await db("tabela-produtos").where({ id }).update(data);
+
+    res.status(201).json({ message: "product updated!" });
+  } catch (error) {
+    res.status(500).json({ messageError: error });
+  }
+});
+
+router.delete("/delete/:id", async (req, res) => {
+  const { id } = req?.params ?? {};
+
+  if (!id)
+    return res.status(400).json({ messageError: "server cant read id field" });
+
+  try {
+    const verifyId = await db("tabela-produtos").where({ id });
+
+    if (!verifyId.length)
+      return res
+        .status(404)
+        .json({ message: `not fount any product with id ${id}` });
+
+    await db("tabela-produtos").where({ id }).del();
+    res.status(200).json({ message: "product deleted!" });
   } catch (error) {
     res.status(500).json({ messageError: error });
   }
