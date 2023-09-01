@@ -8,6 +8,16 @@ type ProductData = {
   preco: number;
 };
 
+const validateProductValues = (data: ProductData) => {
+  if (typeof data !== "object" || !data) return false;
+
+  return (
+    typeof data.descricao === "string" &&
+    typeof data.marca === "string" &&
+    typeof data.preco === "number"
+  );
+};
+
 const db = knex(knexConfig.development);
 
 export const router = express.Router();
@@ -58,7 +68,7 @@ router.put("/update/:id", async (req, res) => {
   const { id } = req?.params ?? {};
   const data: ProductData = req?.body;
 
-  if (!data.descricao || !data.marca || !data.preco)
+  if (!validateProductValues(data))
     return res.status(400).json({ message: "missing required arguments" });
 
   if (!id)
