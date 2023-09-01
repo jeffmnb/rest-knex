@@ -2,6 +2,12 @@ import express from "express";
 import knex from "knex";
 import knexConfig from "../../knexfile";
 
+type ProductData = {
+  descricao: string;
+  marca: string;
+  preco: number;
+};
+
 const db = knex(knexConfig.development);
 
 export const router = express.Router();
@@ -50,7 +56,10 @@ router.post("/insert", async (req, res) => {
 
 router.put("/update/:id", async (req, res) => {
   const { id } = req?.params ?? {};
-  const data = req?.body ?? {};
+  const data: ProductData = req?.body;
+
+  if (!data.descricao || !data.marca || !data.preco)
+    return res.status(400).json({ message: "missing required arguments" });
 
   if (!id)
     return res.status(400).json({ messageError: "server cant read id field" });
