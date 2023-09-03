@@ -1,5 +1,4 @@
 import express from "express";
-
 import { router as produtosRouter } from "./routes/produtos.routes";
 
 const app = express();
