@@ -1,22 +1,8 @@
 import express from "express";
 import knex from "knex";
 import knexConfig from "../../knexfile";
-
-type ProductData = {
-  descricao: string;
-  marca: string;
-  preco: number;
-};
-
-const validateProductValues = (data: ProductData) => {
-  if (typeof data !== "object" || !data) return false;
-
-  return (
-    typeof data.descricao === "string" &&
-    typeof data.marca === "string" &&
-    typeof data.preco === "number"
-  );
-};
+import { ProductData } from "./produtos.types";
+import { validateProductValues } from "./utils";
 
 const db = knex(knexConfig.development);
 
