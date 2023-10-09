@@ -30,6 +30,7 @@ router.get("/:id", async (req, res) => {
       return res.status(404).json({ messageError: "product not found" });
 
     res.status(200).json({ produto: produtos[0] });
+    
   } catch (error) {
     res.status(500).json({ messageError: error });
   }
