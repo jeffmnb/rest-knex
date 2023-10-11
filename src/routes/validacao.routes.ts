@@ -29,8 +29,6 @@ validateRouter.post("/", async (req, res) => {
 validateRouter.get("/:descricao", async (req, res) => {
   const { descricao } = req.params;
 
-  console.log(descricao);
-
   try {
     const getKeyAccess = await db("tabela-produtos")
       .select("*")
